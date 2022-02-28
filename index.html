@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>PoC: e.preventdefault HTML links</title>
+    <style>
+      .box{
+        width:150px;
+        height:150px;
+        background:red;
+      }
+      .space{
+        min-height:100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <h1><code>e.preventDefault</code> example</h1>
+    <section>
+      <h2>Link and coloured container</h2>
+      <p>By pressing the link below, the browser will not scroll down to the bottom, but instead change the colour of the box. However, for non-JS user-agent the page will scroll to the bottom.</p>
+      <h3>Steps to follow</h3>
+      <ol>
+        <li>Click on link with JavaScript enabled</li>
+        <li>Confirm box changes colour from red to green</li>
+        <li>Disable JavaScript of browser</li>
+        <li>Click on link with JavaScript disabled</li>
+        <li>Confirm page scrolls down to bottom</li>
+      </ol>
+      <h3>The link</h3>
+      <p><a href="#bottom" class="link-in-scope">Click me!</a></p>
+      <h3>The box that changes colour</h3>
+      <div class="box"></div>
+      <ul>
+        <li>Default state: red</li>
+        <li>First click: green</li>
+        <li>Subsequent clicks: alternating yellow and green</li>
+      </ul>
+    </section>
+    <section class="space">
+      <h2>Blank space to force browser to scroll later</h2>
+    </section>
+    <section id="bottom">
+      <h2>Bottom of the page</h2>
+      <p>Hello World!</p>
+    </section>
+    <script>
+      /* A function we can run during load, so links are disabled */
+      const linkListener = () => {
+
+        /* Select all links with the class 'link-in-scope' and iterate through them to apply listener */
+        document.querySelectorAll('.link-in-scope').forEach((link) => {
+          
+          /* Attach a listener (click) to each link */
+          link.addEventListener('click', event => {
+
+            /* Stop default behaviour and propagation from happening - Mozilla: https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault */
+            event.preventDefault();
+            event.stopPropagation();
+
+            /* Now the default function has been disabled, we can process the click event with our own action */
+
+            /* For example, change the background colour of the box - With the additional fun of adding yellow to the mix */
+            document.querySelector('.box').style.backgroundColor = document.querySelector('.box').style.backgroundColor == 'green' ? 'yellow' : 'green';
+          });
+        });
+      }
+      /* Call the function */
+      linkListener();
+    </script>
+  </body>
+</html>
